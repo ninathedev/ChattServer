@@ -20,9 +20,10 @@
 
 package io.github.realguystuff.ChattServer;
 
-import java.io.IOException; // libraries
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Server {
     // create serverSocket class
@@ -33,11 +34,11 @@ public class Server {
         this.serverSocket = serverSocket;
     }
 
-    public void serverStart(){
-
-        try{
+    public void serverStart() {
+        System.out.println("Server is up and running.");
+        try {
             // check and loop the serverSocket
-            while(!serverSocket.isClosed()){
+            while (!serverSocket.isClosed()) {
                 Socket socket = serverSocket.accept();
                 System.out.println("New Friend Connected");
                 // implemented an object which handle runnable class
@@ -46,6 +47,17 @@ public class Server {
                 Thread thread = new Thread(clientHandler);
                 thread.start();
             }
+
+            Scanner scanner = new Scanner(System.in);
+            String input;
+            while (true) {
+                input = scanner.nextLine();
+                if (input.equalsIgnoreCase("stop")) {
+                    closeServer();
+                    break;
+                }
+            }
+            scanner.close();
         } catch (IOException e) {
             System.out.println("Error S1:");
             e.printStackTrace();
@@ -59,6 +71,7 @@ public class Server {
         try{
             if(serverSocket != null){
                 serverSocket.close();
+                System.out.println("Closing server...");
             }
         } catch(IOException e){
             System.out.println("Error S2:");
@@ -73,6 +86,5 @@ public class Server {
         Server server = new Server(serverSocket);
         System.out.println("Starting server...");
         server.serverStart();
-        System.out.println("Done!");
     }
 }
